@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,18 +24,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.authorizeRequests()
-				.antMatchers("/", "/home").permitAll()
-				.anyRequest().authenticated()
-				.and()
-			.formLogin()
-				.permitAll()
-				.and()
-			.logout()
-				.permitAll();
+		http.authorizeRequests().antMatchers("/", "/home").permitAll().anyRequest().authenticated().and().formLogin()
+				.permitAll().and().logout().permitAll();
 	}
-	
+
 	@Bean
 	public UserDetailsService userDetailsService() {
 		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
@@ -98,5 +91,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		return passworEncoder;
 	}
-	
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+		// The following code enables us to migrate passwords with old standard
+		// encoding.
+		// By default, extracting the password in clear text wouldn’t be possible
+		// because
+		// Spring Security deletes it as soon as possible.
+		// Hence, we need to configure Spring so that it keeps the cleartext version of
+		// the password.
+		// Additionally, we need to register our encoding delegation:
+		auth.eraseCredentials(false).userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+
+		// The actual migration is done in PasswordEncodingMigration.
+		// More information can be found under:
+		// https://www.baeldung.com/spring-security-5-password-storage
+	}
+
 }
