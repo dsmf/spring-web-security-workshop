@@ -1,9 +1,5 @@
-# Formular-basierter Login/Logout mit generiertem Formular
+# Formular-basierter Login/Logout mit eigenem Formular
 
 Benutzer und Passworte sind hart konfiguriert.
 
-
-Es wird der neue Spring Security 5 Password Encoding Delegation Mechanismus gezeigt, der es ermöglicht, mit unterschiedlich encodierten Passworten zu arbeiten.
-
-
-Außerdem wird ein Weg aufgezeigt, um alte Password-Encodings zu aktualisieren.
+Es wird Password Encoding mit BCryptPasswordEncoder gezeigt.
