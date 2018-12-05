@@ -1,7 +1,6 @@
-# HTTP Basic Auth mit generiertem Passwort 
+# Formular-basierter Login/Logout mit generiertem Formular
 
-Beim Starten von Spring Boot wird automatisch ein Passwort generiert und im Logfile ausgegeben.
-Mit Benutzername "user" und diesem Passwort kann man sich nun einloggen.
-
+Benutzer und Passworte sind hart konfiguriert.
 
 
+Es wird der neue Spring Security 5 Password Encoding Delegation Mechanismus gezeigt, der es ermöglicht, mit unterschiedlich encodierten Passworten zu arbeiten.
