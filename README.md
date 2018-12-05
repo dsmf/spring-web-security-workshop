@@ -1,5 +1,5 @@
-# Formular-basierter Login/Logout mit eigenem Formular
+# Login/Logout mit eigenem Formular und JDBC Authentication
 
-Benutzer und Passworte sind hart konfiguriert.
+Benutzer und Passworte kommen via JDBC aus einer Datenbank.
 
 Es wird Password Encoding mit BCryptPasswordEncoder gezeigt.

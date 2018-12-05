@@ -1,20 +1,24 @@
 package hello;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	@Autowired
+	private DataSource dataSource;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
@@ -30,31 +34,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.permitAll();
 	}
 
-	@Bean
-	public UserDetailsService userDetailsService() {
-		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-
-		createUser(manager);
-		createAdminUser(manager);
-
-		return manager;
-	}
-
-	private void createUser(InMemoryUserDetailsManager manager) {
-		manager.createUser(User.withUsername("user")
-				// Password "user" encoded with the old Standard encoding (SHA-256)
-				.password("$2a$10$opaTlVRWtftWBrIKFtjq2OWm58NyTfNnhtXTzLGqj5FNT9Drl2TTq").roles("USER").build());
-	}
-
-	private void createAdminUser(InMemoryUserDetailsManager manager) {
-		manager.createUser(User.withUsername("admin")
-				// Password "admin" encoded with BCrypt:
-				.password("$2a$10$ih2w5IGJQ0PrNJTQuSiuDuHIHaIGNmhTZV42ugf8ehP5y1WauXIcC").roles("ADMIN").build());
-	}
-
+    @Override
+    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.jdbcAuthentication()
+               .passwordEncoder(passwordEncoder())
+               .dataSource(dataSource);
+    }
+    
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
+	
 }
