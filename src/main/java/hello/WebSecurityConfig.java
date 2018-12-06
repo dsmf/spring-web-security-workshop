@@ -37,8 +37,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.jdbcAuthentication()
-               .passwordEncoder(passwordEncoder())
-               .dataSource(dataSource);
+        		// The following is used as default and therefore not necessary to specify
+                // but customization is possible with these methods.
+				//.usersByUsernameQuery("select username,password,enabled from users where username = ?")
+				//.authoritiesByUsernameQuery("select username,authority from authorities where username = ?")
+               	.passwordEncoder(passwordEncoder())
+               	.dataSource(dataSource);
     }
     
 	@Bean
