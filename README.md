@@ -1,5 +1,5 @@
-# Login/Logout mit eigenem Formular und JDBC Authentication
+# Login/Logout mit eigenem Formular und eigenem JPA-basierten UserDetailsService
 
-Benutzer und Passworte kommen via JDBC aus einer Datenbank.
+Benutzer und Passworte kommen via JPA aus der Datenbank.
 
-Es wird Password Encoding mit BCryptPasswordEncoder gezeigt.
+Password Encoding mit BCryptPasswordEncoder.

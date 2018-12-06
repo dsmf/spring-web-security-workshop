@@ -1,6 +1,4 @@
-package hello;
-
-import javax.sql.DataSource;
+package hello.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+	
 	@Autowired
-	private DataSource dataSource;
+	private CustomUserDetailsService userDetailsService;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -36,13 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.jdbcAuthentication()
-        		// The following is used as default and therefore not necessary to specify
-                // but customization is possible with these methods.
-				//.usersByUsernameQuery("select username,password,enabled from users where username = ?")
-				//.authoritiesByUsernameQuery("select username,authority from authorities where username = ?")
-               	.passwordEncoder(passwordEncoder())
-               	.dataSource(dataSource);
+        builder.userDetailsService(userDetailsService)
+               	.passwordEncoder(passwordEncoder());             
     }
     
 	@Bean
